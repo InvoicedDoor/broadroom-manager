@@ -1,8 +1,8 @@
 from rest_framework import routers
-from broadrooms import views
+from users import views
 
 router = routers.DefaultRouter()
 
-router.register('api/users', views.BroadroomView, 'users')
+router.register('api/users', views.UserView, 'users')
 
 urlpatterns = router.urls

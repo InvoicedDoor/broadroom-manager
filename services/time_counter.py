@@ -1,15 +1,15 @@
-import time, os
+import time
 
 # Función para calcular la hora de finalización reglamentaria
 def set_max_time():
     #try:
-        # time_now = time.localtime()
-        # year = time_now.tm_year
-        # month = len_two(time_now.tm_mon)
-        # day = len_two(time_now.tm_mday)
-        # hour = len_two(time_now.tm_hour + 2)
-        # minute = len_two(time_now.tm_min)
-        # second = len_two(time_now.tm_sec)
+        # # time_now = time.localtime()
+        # # year = time_now.tm_year
+        # # month = len_two(time_now.tm_mon)
+        # # day = len_two(time_now.tm_mday)
+        # # hour = len_two(time_now.tm_hour + 2)
+        # # minute = len_two(time_now.tm_min)
+        # # second = len_two(time_now.tm_sec)
         time_now = time.localtime()
         year = time_now.tm_year
         month = time_now.tm_mon
@@ -26,5 +26,3 @@ def len_two(time):
     if len(str(time)) == 1:
             time = f'0{time}'
     return time
-
-print(set_max_time())
