@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, status,request
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from datetime import time, datetime
 from django.db import connection
@@ -37,6 +37,7 @@ class ReservationView(viewsets.ModelViewSet):
                 }, status.HTTP_409_CONFLICT)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+        
         return Response({
             "status": "success",
             "message": "Registro realizado con éxito."
@@ -73,6 +74,13 @@ class ReservationView(viewsets.ModelViewSet):
                 }, status.HTTP_404_NOT_FOUND)
     
     @classmethod
+    # Cuntar el tiempo de desde el inicio al final
+    def difference_time(self, start_time, finsih_time):
+        if start_time < finsih_time:
+            return finsih_time-start_time
+        else:
+            return (24-start_time)+finsih_time
+
     def validate_availability(self, request):
         try:
             with connection.cursor() as cursor:
@@ -84,12 +92,14 @@ class ReservationView(viewsets.ModelViewSet):
             return "Error en la conexión"
         finally:
             cursor.close()
-            
+    
+    # Comprobar si la hora ingresada es después al tiempo actual
     def validate_start_hour(self, date):
         if time.fromisoformat(date) < datetime.now().time():
             return True
         return False
     
+    # Validar que la hora de finalización sea mayor al horario de inicio y que no sea mayor a 2 horas a partir del inicio
     def validate_finish_hour(self, start_date, finish_date):
         try:
             if int(time.fromisoformat(start_date).hour+2) > 23:
@@ -104,11 +114,13 @@ class ReservationView(viewsets.ModelViewSet):
             return False
         except Exception as ex:
             return False
-        
+    
+    # Dar formato datetime a la entrada ingresada por el usuario
     def formated_datetime(self, string_time):
         string_date = datetime.now().date()
         return datetime.combine(string_date, time.fromisoformat(string_time)).isoformat()
-        
+    
+    # Obtener las reservaciones
     def get_reservations(self, request):
         reservations = []
         try:
@@ -135,7 +147,18 @@ class ReservationView(viewsets.ModelViewSet):
                 }
         finally:
             cursor.close()
-            
+    
+    # Concepto para borrar el registro de manera automática
+    def auto_delete_reservations(self):
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("DELETE FROM reservations_reservation WHERE finish_time < NOW()")
+        except Exception as ex:
+            return "Ocurrió un error"
+        finally:
+            cursor.close()
+    
+    # Función para eliminar las reservaciones de manera manual
     def delete_reservation(self, id):
         try:
             with connection.cursor() as cursor:

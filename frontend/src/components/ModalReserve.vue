@@ -28,6 +28,7 @@ export default {
         this.typeAlert = 'error'
         this.message = 'Complete los campos primero'
         this.showAlert = true
+        return
       }
 
       const res = await reserve(this.user_id, this.room_id, this.start, this.finish)
@@ -119,7 +120,7 @@ export default {
 }
 
 .entry {
-  height: 5vh;
+  height: 3rem;
   width: 100%;
   display: flex;
   margin-top: 2rem;
@@ -137,7 +138,7 @@ export default {
 select,
 input {
   width: 62%;
-  height: 3vh;
+  height: 2rem;
   border: 1px black solid;
   border-radius: 5px;
   margin-left: 0.5rem;
@@ -159,21 +160,21 @@ input {
   position: absolute;
   padding: 20px;
   border-radius: 8px;
-  height: 20vh;
+  height: 10rem;
   width: 28vw;
 }
 
 .entries label {
-  font-size: 2vh;
+  font-size: 1rem;
   color: white;
   width: 100%;
   text-align: center;
 }
 
 .entries button {
-  font-size: 2vh;
+  font-size: 1rem;
   width: 100%;
-  margin-top: 8%;
+  margin-top: 0.5rem;
 }
 
 .room-info {

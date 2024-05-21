@@ -1,5 +1,5 @@
 <script>
-import ModalRegister from '@/components/ModalRegister.vue'
+import ModalRegister from '@/components/ModalReserve.vue'
 
 export default {
   name: 'Button-to-add',
@@ -40,14 +40,14 @@ header {
 }
 
 .modal-header {
-  height: 7vh;
+  height: 5rem;
   display: flex;
   align-items: center;
   padding-left: 0.5rem;
 }
 
 .modal-header button {
-  margin-right: 2.5vw;
+  margin-right: 1rem;
   width: 8vw;
 }
 
@@ -72,7 +72,7 @@ header {
 }
 
 button {
-  height: 5vh;
+  height: 3rem;
   color: white;
   appearance: none;
   border: none;
@@ -101,7 +101,7 @@ button {
   background: #07bfff;
   padding: 20px;
   border-radius: 8px;
-  height: 60vh;
+  height: 32rem;
   width: 30vw;
 }
 

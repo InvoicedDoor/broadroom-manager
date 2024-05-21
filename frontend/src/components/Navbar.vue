@@ -4,14 +4,47 @@
       <h1>Administrador de sala de reuniones</h1>
     </div>
     <div class="options">
-      <button>Agregar usuario</button>
+      <button @click="showModalRegister = true">Agregar usuario</button>
+    </div>
+  </div>
+  <div v-if="showModalRegister" class="modal-overlay">
+    <div class="modal-user">
+      <header class="modal-header">
+        <button @click="showModalRegister = false">Close</button>
+        <div class="modal-title">
+          <h2>Crea un usuario</h2>
+        </div>
+      </header>
+      <ModalAddUser></ModalAddUser>
     </div>
   </div>
 </template>
 
-<script></script>
+<script>
+import ModalAddUser from './ModalAddUser.vue'
+
+export default {
+  name: 'Navbar-properties',
+  data() {
+    return {
+      showModalRegister: false
+    }
+  },
+  components: {
+    ModalAddUser
+  }
+}
+</script>
 
 <style scoped>
+.modal-user {
+  background: #07bfff;
+  padding: 20px;
+  border-radius: 8px;
+  height: 22rem;
+  width: 30vw;
+}
+
 .navbar {
   background-color: #0978aa;
   height: 14vh;

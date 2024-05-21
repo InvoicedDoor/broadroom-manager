@@ -1,5 +1,13 @@
 <!-- Renderizado de la tabla para el registro de las salas -->
 <template>
+  <div class="delete-alert">
+    <div class="alert" :class="typeAlert" v-if="showAlert">
+      <div class="alert-header">
+        <button @click="close()">Close</button>
+      </div>
+      <div>{{ message }}</div>
+    </div>
+  </div>
   <div class="table">
     <table>
       <thead>
@@ -15,8 +23,8 @@
         <tr v-for="item in data" :key="item.id">
           <td>{{ item.user }}</td>
           <td>{{ item.room }}</td>
-          <td>{{ formatDate(item.start_time) }}</td>
-          <td>{{ formatDate(item.finish_time) }}</td>
+          <td>{{ item.start_time }}</td>
+          <td>{{ item.finish_time }}</td>
           <td>
             <div class="acciones-registro">
               <button @click="deleteReservation(item.id)">Terminar</button>
@@ -34,11 +42,6 @@ import { getRegisters, cancelReservation } from '@/services/FunctionsFetch.ts'
 // Se ejecuta la función y se maneja la promesa con un await
 let dataRow = await getRegisters()
 
-const actionFromDelete = (id) => {
-  cancelReservation(id)
-  dataRow = getRegisters()
-}
-
 export const actionFromGet = async () => {
   await getRegisters()
 }
@@ -48,12 +51,15 @@ export default {
   name: 'Table-Content',
   data() {
     return {
-      data: dataRow
+      data: dataRow,
+      typeAlert: '',
+      message: '',
+      showAlert: false
     }
   },
   methods: {
     async getData() {
-      actionFromGet()
+      await actionFromGet()
     },
     // Función para dar un formato más legible al usuario
     formatDate(dateString) {
@@ -69,8 +75,16 @@ export default {
 
       return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`
     },
-    deleteReservation(id) {
-      actionFromDelete(id)
+    async deleteReservation(id) {
+      let res = await cancelReservation(id)
+      this.dataRow = await getRegisters()
+      console.log(res)
+      this.typeAlert = res.status
+      this.message = res.message
+      this.showAlert = true
+    },
+    close() {
+      this.showAlert = false
     }
   }
 }
@@ -78,6 +92,12 @@ export default {
 
 <!-- Estilos para la plantilla -->
 <style>
+.delete-alert {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .table {
   width: 100%;
   display: flex;
