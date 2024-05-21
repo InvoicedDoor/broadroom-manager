@@ -17,6 +17,7 @@ class ReservationView(viewsets.ModelViewSet):
     
     # Módificación de la función para el método POST
     def create(self, request, *args, **kwargs):
+        print(request.data['start_time'])
         serializer = self.get_serializer(data=request.data)
         if self.validate_start_hour(request.data['start_time']):
             return Response({
@@ -34,12 +35,11 @@ class ReservationView(viewsets.ModelViewSet):
                 'status': 'error',
                 'message': 'La sala ya esta reservada.'
                 }, status.HTTP_409_CONFLICT)
-
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response({
             "status": "success",
-            "message": "serializer.data"
+            "message": "Registro realizado con éxito."
             }, status.HTTP_201_CREATED)
         
     # Denegación del acceso al método PUT y PATCH
@@ -59,6 +59,7 @@ class ReservationView(viewsets.ModelViewSet):
     # Modificación del comportamiento del método DELETE
     def destroy(self, request, pk=None, *args, **kwargs):
         res = self.delete_reservation(pk)
+        print(res)
         if res:
             return Response({
                 "status": "success",
@@ -104,6 +105,10 @@ class ReservationView(viewsets.ModelViewSet):
         except Exception as ex:
             return False
         
+    def formated_datetime(self, string_time):
+        string_date = datetime.now().date()
+        return datetime.combine(string_date, time.fromisoformat(string_time)).isoformat()
+        
     def get_reservations(self, request):
         reservations = []
         try:
@@ -136,7 +141,6 @@ class ReservationView(viewsets.ModelViewSet):
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM reservations_reservation WHERE id=%s", [id])
                 raw = cursor.fetchone()
-                print(raw)
                 if raw:
                     cursor.execute("DELETE FROM reservations_reservation WHERE id=%s", [id])
                     return True

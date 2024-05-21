@@ -1,0 +1,4 @@
+# Python exclude
+__pycache__
+
+venv
