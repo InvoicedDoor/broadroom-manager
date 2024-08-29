@@ -1,7 +1,9 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from datetime import time, datetime
+from django.utils import timezone
 from django.db import connection
+from services.time_counter import auto_delete_rows
 from .serializer import ReservationSerializer
 from .models import Reservation
 
@@ -17,14 +19,23 @@ class ReservationView(viewsets.ModelViewSet):
     
     # Módificación de la función para el método POST
     def create(self, request, *args, **kwargs):
-        print(request.data['start_time'])
+        print(request.data)
+        # Variables iniciales para trabajar la función
+        start_time = request.data['start_time']
+        finish_time = request.data['finish_time']
+        print(f"{start_time}, {finish_time}, {datetime.now()}")
         serializer = self.get_serializer(data=request.data)
-        if self.validate_start_hour(request.data['start_time']):
+        duration = datetime.fromisoformat(finish_time) - datetime.fromisoformat(start_time)
+        
+        # Validar que la hora de inicio no sea antes de la hora de registro
+        if not self.validate_start_hour(start_time):
             return Response({
                 "status": "error",
                 "message": "La hora de inicio no es válida."
             })
-        if self.validate_finish_hour(start_date=request.data['start_time'], finish_date=request.data['finish_time']):
+        
+        # Validar que la hora de finalización no sea antes de la hora de iniciación y no sea mayor a 2 horas
+        if not self.validate_finish_hour(start_time, finish_time, duration.seconds):    
             return Response({
                 "status": "error",
                 "message": "La hora de término no es válida."
@@ -35,9 +46,10 @@ class ReservationView(viewsets.ModelViewSet):
                 'status': 'error',
                 'message': 'La sala ya esta reservada.'
                 }, status.HTTP_409_CONFLICT)
+            
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        
+        auto_delete_rows(duration.seconds, start_time, serializer.data['id'])
         return Response({
             "status": "success",
             "message": "Registro realizado con éxito."
@@ -60,7 +72,6 @@ class ReservationView(viewsets.ModelViewSet):
     # Modificación del comportamiento del método DELETE
     def destroy(self, request, pk=None, *args, **kwargs):
         res = self.delete_reservation(pk)
-        print(res)
         if res:
             return Response({
                 "status": "success",
@@ -95,22 +106,19 @@ class ReservationView(viewsets.ModelViewSet):
     
     # Comprobar si la hora ingresada es después al tiempo actual
     def validate_start_hour(self, date):
-        if time.fromisoformat(date) < datetime.now().time():
+        if datetime.fromisoformat(date) > datetime.now():
             return True
         return False
     
     # Validar que la hora de finalización sea mayor al horario de inicio y que no sea mayor a 2 horas a partir del inicio
-    def validate_finish_hour(self, start_date, finish_date):
+    def validate_finish_hour(self, start_time, finsih_time, duration):
         try:
-            if int(time.fromisoformat(start_date).hour+2) > 23:
-                hour_finish = int(time.fromisoformat(start_date).hour+2)-24
-            else:
-                hour_finish = time.fromisoformat(start_date).hour+2
-            minute=time.fromisoformat(start_date).minute
-            second=time.fromisoformat(start_date).second
-            max_time = time(hour=hour_finish, minute=minute, second=second).isoformat()
-            if time.fromisoformat(finish_date) > time.fromisoformat(max_time):
-                return True
+            if duration < 7200:
+                if datetime.fromisoformat(finsih_time) > datetime.fromisoformat(start_time):
+                    if datetime.fromisoformat(start_time) > datetime.now():
+                        return True
+                    return False
+                return False
             return False
         except Exception as ex:
             return False
@@ -145,16 +153,6 @@ class ReservationView(viewsets.ModelViewSet):
                 "status": "error",
                 "message": "Error en la conexión"
                 }
-        finally:
-            cursor.close()
-    
-    # Concepto para borrar el registro de manera automática
-    def auto_delete_reservations(self):
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM reservations_reservation WHERE finish_time < NOW()")
-        except Exception as ex:
-            return "Ocurrió un error"
         finally:
             cursor.close()
     

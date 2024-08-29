@@ -1,17 +1,13 @@
 from django.utils import timezone
+from time import sleep
+from threading import Thread
+from django.db import connection
 from datetime import datetime
 
 # Función para calcular la hora de finalización reglamentaria
 def set_max_time():
-    #try:
-        # # time_now = time.localtime()
-        # # year = time_now.tm_year
-        # # month = len_two(time_now.tm_mon)
-        # # day = len_two(time_now.tm_mday)
-        # # hour = len_two(time_now.tm_hour + 2)
-        # # minute = len_two(time_now.tm_min)
-        # # second = len_two(time_now.tm_sec)
-        time_now = datetime.localtime()
+    try:
+        time_now = datetime.now()
         year = time_now.tm_year
         month = time_now.tm_mon
         day = time_now.tm_mday
@@ -20,8 +16,8 @@ def set_max_time():
         second = time_now.tm_sec
         formated_time = f'{year}-{month}-{day}T{hour}:{minute}:{second}'
         return formated_time
-    #except Exception as ex:
-    #    return "No se pudo ejecutar"
+    except Exception as ex:
+        return "No se pudo ejecutar"
 
 # Función para validar que los horarios sean correctos.
 def validate_date(start_time, finish_time):
@@ -41,3 +37,26 @@ def len_two(time):
     if len(str(time)) == 1:
             time = f'0{time}'
     return time
+
+def count_seconds(seconds, start_time, id):
+    try:
+        while start_time:
+            if datetime.fromisoformat(start_time) < datetime.now():
+                break
+            sleep(1)
+        with connection.cursor() as cursor:
+            for second in range(seconds+1):
+                if second == seconds:
+                    cursor.execute("DELETE FROM reservations_reservation WHERE id=%s", [id])
+                    print(f"Registro eliminado a las {datetime.now()}")
+                sleep(1)
+    except Exception as ex:
+        print(f"Hubo un error {ex}")
+    finally:
+        if cursor:
+            cursor.close()
+
+# Función para automatizar el borrado de registros
+def auto_delete_rows(seconds, start_time, id):
+    thread = Thread(target=count_seconds, args=(seconds,start_time, id))
+    thread.start()

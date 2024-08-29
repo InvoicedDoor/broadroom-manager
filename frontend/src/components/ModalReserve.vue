@@ -1,6 +1,9 @@
 <script>
 import { reserve, getUsers, getRooms } from '@/services/FunctionsFetch.ts'
-import { actionFromGet } from './Table.vue'
+import { useReservationsStore } from '@/stores/ReservationsStore';
+import { useShowModalStore } from '@/stores/ShowModalStore';
+
+import { mapActions, mapState } from 'pinia';
 
 let users = await getUsers()
 let rooms = await getRooms()
@@ -22,7 +25,12 @@ export default {
       finish: ''
     }
   },
+  computed: {
+    ...mapState(useReservationsStore, ['getReservations'])
+  },
   methods: {
+    ...mapActions(useReservationsStore, ['getDataReservation']),
+    ...mapActions(useShowModalStore, ['hiddenModal']),
     async doReservation() {
       if (!this.user_id || !this.room_id || !this.start || !this.finish) {
         this.typeAlert = 'error'
@@ -32,12 +40,16 @@ export default {
       }
 
       const res = await reserve(this.user_id, this.room_id, this.start, this.finish)
+      if (new Date().toISOString() === this.finish) {
+        await this.getReservations()
+      } 
       this.typeAlert = res.status
       this.message = res.message
       this.showAlert = true
-      actionFromGet()
+      await this.getDataReservation()
+      this.hiddenModal()
     },
-    close() {
+    async close() {
       this.showAlert = false
     }
   }
@@ -90,13 +102,13 @@ export default {
       <div class="section-title">
         <label>Hora de inicio</label>
       </div>
-      <input type="time" v-model="start" />
+      <input type="datetime-local" v-model="start" />
     </div>
     <div class="entry">
       <div class="section-title">
         <label>Hora de término</label>
       </div>
-      <input name="finish-time" type="time" v-model="finish" />
+      <input name="finish-time" type="datetime-local" v-model="finish" />
     </div>
     <button v-on:click="doReservation()">Reservar</button>
   </div>

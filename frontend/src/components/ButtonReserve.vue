@@ -1,17 +1,23 @@
 <script>
 import ModalRegister from '@/components/ModalReserve.vue'
+import { useShowModalStore } from '@/stores/ShowModalStore';
+import { mapActions, mapState } from 'pinia';
 
 export default {
   name: 'Button-to-add',
   data() {
     return {
-      showModalRegister: false,
-      showModal: false,
       showAlert: false
     }
   },
+  computed: {
+    ...mapState(useShowModalStore, ['getShowModal'])
+  },
   components: {
     ModalRegister
+  },
+  methods: {
+    ...mapActions(useShowModalStore, ['showModal', 'hiddenModal'])
   }
 }
 </script>
@@ -19,10 +25,10 @@ export default {
 <!-- Botón para agregar reservaciones -->
 <template>
   <div class="add-button">
-    <div v-if="showModalRegister" class="modal-overlay">
+    <div v-if="getShowModal" class="modal-overlay">
       <div class="modal">
         <header class="modal-header">
-          <button @click="showModalRegister = false">Close</button>
+          <button @click="hiddenModal()">Close</button>
           <div class="modal-title">
             <h2>Reserva una sala</h2>
           </div>
@@ -30,7 +36,7 @@ export default {
         <ModalRegister></ModalRegister>
       </div>
     </div>
-    <button class="add" @click="showModalRegister = true">Reservar una sala</button>
+    <button class="add" @click="showModal()">Reservar una sala</button>
   </div>
 </template>
 
