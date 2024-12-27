@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:8000'
+const BASE_URL = import.meta.env.VITE_SERVER_HOST
 
 /* Método GET */
 export const getRegisters = async () => {
@@ -7,8 +7,16 @@ export const getRegisters = async () => {
       'Content-Type': 'application/json'
     }
   })
-  const data = await res.json()
-  return data['message']
+
+
+  if (res.ok)
+  {
+    const data:any = await res.json()
+    return data['message']
+  }
+  else {
+    console.log("No se puede realizar: " + res)
+  }
 }
 
 export const getUsers = async () => {
@@ -17,8 +25,12 @@ export const getUsers = async () => {
       'Content-Type': 'application/json'
     }
   })
-  const data = await res.json()
-  return data
+  if (res.ok)
+  {
+    const data = await res.json()
+    return data
+  }
+  console.log("Error del servidor: " + res)
 }
 
 export const getRooms = async () => {
@@ -27,8 +39,13 @@ export const getRooms = async () => {
       'Content-Type': 'application/json'
     }
   })
-  const data = await res.json()
-  return data
+
+  if (res.ok)
+  {
+    const data = await res.json()
+    return data
+  }
+  console.log("Error del servidor: " + res)
 }
 
 /* Método POST */

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import Navbar from './components/Navbar.vue'
-import ButtonReserve from './components/ButtonReserve.vue'
-import Table from './components/Table.vue'
+import { useRouter } from 'vue-router';
+import { isAuthenticated } from './services/auth.service';
+import LoginView from './views/auth/LoginView.vue';
+import MainView from './views/MainView.vue';
+import router from './router'; 
 </script>
 
 <template>
-  <div class="root">
-    <Navbar></Navbar>
-    <ButtonReserve></ButtonReserve>
-    <Table></Table>
+  <div id="app" class="root">
+    <router-view></router-view>
   </div>
 </template>
 

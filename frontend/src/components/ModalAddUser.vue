@@ -16,41 +16,56 @@
   </div>
 </template>
 
-<script>
-const BASE_URL = 'http://127.0.0.1:8000'
+<script setup>
+import { addUser } from '@/services/FunctionsFetch';
+import { ref } from 'vue';
+import { toast } from 'vue3-toastify';
 
-export default {
-  name: 'ModalAdd',
-  data() {
-    return {
-      name: '',
-      enrollment: ''
-    }
-  },
-  methods: {
-    close() {
-      this.$emit('close')
-    },
-    async createUser() {
-      console.log(this.name, this.enrollment)
-      if (!this.enrollment || !this.name) {
-        return
-      }
+const name =  ref('');
+const enrollment = ref('');
 
-      const res = await fetch(`${BASE_URL}/api/users/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: this.name,
-          enrollment: this.enrollment
-        })
-      })
-      const data = await res.json()
-      console.log(data)
-      return data
-    }
+const close = () => {
+  $emit('close')
+}
+
+const createUser = async () => {
+  if (!enrollment.value || !name.value) {
+    return
+  }
+
+  const res = await addUser(enrollment.value, name.value);
+  if (res.status === 'success')
+  {
+    toast.success(res.message, {
+      position: "top-right",
+      autoClose: 3000,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    })
+    return
+  }
+  else if(res.status === "error")
+  {
+    toast.error(res.message, {
+      position: "top-right",
+      autoClose: 3000,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    })
+    return
+  }
+  else
+  {
+    toast.error("No hay respuesta, intentelo más tarde", {
+      position: "top-right",
+      autoClose: 3000,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    })
+    return
   }
 }
 </script>
