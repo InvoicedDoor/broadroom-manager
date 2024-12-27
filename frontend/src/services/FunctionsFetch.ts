@@ -1,7 +1,7 @@
 const BASE_URL = import.meta.env.VITE_SERVER_HOST
 
 /* Método GET */
-export const getRegisters = async () => {
+export const getReservations = async () => {
   const res = await fetch(`${BASE_URL}/api/reservations/`, {
     headers: {
       'Content-Type': 'application/json'

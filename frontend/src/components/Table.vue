@@ -25,6 +25,7 @@
       </table>
     </div>
   </div>
+<<<<<<< HEAD
 </template>
 
 <!-- Código de TypeScript -->
@@ -39,6 +40,89 @@ const props = defineProps({
   columns: {
     type: Object,
     required: true
+=======
+  <div class="table">
+    <table>
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Sala reservada</th>
+          <th>Hora de inicio</th>
+          <th>Hora de termino</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in getReservations" :key="item.id">
+          <td>{{ item.user }}</td>
+          <td>{{ item.room }}</td>
+          <td>{{ formatDate(item.start_time) }}</td>
+          <td>{{ formatDate(item.finish_time) }}</td>
+          <td>
+            <div class="acciones-registro">
+              <button @click="deleteReservation(item.id)">Terminar</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<!-- Código de TypeScript -->
+<script>
+import { useReservationsStore } from '@/stores/ReservationsStore';
+import { cancelReservation } from '@/services/FunctionsFetch';
+import { mapState, mapActions } from 'pinia';
+
+// Se ejecuta la función y se maneja la promesa con un await
+
+
+export default {
+  name: 'Table-Content',
+  data() {
+    return {
+      data: [],
+      showAlert: false
+    }
+  },
+  computed: {
+    ...mapState(useReservationsStore, ['getReservations'])
+  },
+  methods: {
+    ...mapActions(useReservationsStore, ['getDataReservation']),
+    // Función para dar un formato más legible al usuario
+    formatDate(dateString) {
+      const date = new Date(dateString)
+
+      const day = String(date.getUTCDate()).padStart(2, '0')
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+      const year = date.getUTCFullYear()
+
+      const hours = String(date.getUTCHours()).padStart(2, '0')
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+
+      return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`
+    },
+    async deleteReservation(id) {
+      const confirmation = confirm("¿Estás seguro de querer eliminar la reservación?")
+      if (confirmation) {
+        const res = await cancelReservation(id)
+        this.message = res.message
+        this.typeAlert = res.status
+        this.showAlert = true
+        await this.getDataReservation()
+      }
+      this.message = 'No se borró la reservación.'
+      this.typeAlert = 'error'
+      this.showAlert = true
+    },
+    close() {
+      this.showAlert = false
+    }
+
+>>>>>>> 8caf450adaed58061d66af7125fbada68ac29241
   }
 })
 const data = ref();

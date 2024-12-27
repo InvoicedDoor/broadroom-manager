@@ -1,0 +1,2 @@
+ Es un archivo de importación de configuración de la extensión Thunder Client de Visual Studio Code.
+ Se debe configurar en el apartado de colecciones de la extensión.

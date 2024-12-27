@@ -1,0 +1,105 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "broadrooms-manager",
+    "collectionId": "e45616c6-5238-474f-bad0-71a4c1252b88",
+    "dateExported": "2024-05-21T23:43:00.375Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "bb45ac57-c9b0-4fc5-af45-cb0283c743c3",
+            "colId": "e45616c6-5238-474f-bad0-71a4c1252b88",
+            "containerId": "",
+            "name": "get_users",
+            "url": "http://localhost:8000/api/users/",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-05-21T23:20:07.741Z",
+            "modified": "2024-05-21T23:20:21.532Z",
+            "headers": []
+        },
+        {
+            "_id": "8fca9bed-8e13-40d0-8bf9-f370d981430c",
+            "colId": "e45616c6-5238-474f-bad0-71a4c1252b88",
+            "containerId": "",
+            "name": "create_user",
+            "url": "http://localhost:8000/api/users/",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-05-21T23:20:36.246Z",
+            "modified": "2024-05-21T23:28:02.211Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"José\",\n  \"enrollment\": \"MT200003\"\n}\n",
+                "form": []
+            }
+        },
+        {
+            "_id": "9847bdc7-238d-4de6-b53a-d6b8c0b8cda5",
+            "colId": "e45616c6-5238-474f-bad0-71a4c1252b88",
+            "containerId": "",
+            "name": "get_reservations",
+            "url": "http://localhost:8000/api/reservations/",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-05-21T23:34:42.924Z",
+            "modified": "2024-05-21T23:38:25.574Z",
+            "headers": []
+        },
+        {
+            "_id": "003d2c5c-d7a7-486b-8b54-04368770cb69",
+            "colId": "e45616c6-5238-474f-bad0-71a4c1252b88",
+            "containerId": "",
+            "name": "make_reservations",
+            "url": "http://localhost:8000/api/broadrooms/",
+            "method": "POST",
+            "sortNum": 35000,
+            "created": "2024-05-21T23:35:32.480Z",
+            "modified": "2024-05-21T23:38:40.873Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"id_user\": 1,\n  \"id_broadroom\": 1,\n  \"start_time\": \"09:30\",\n  \"finish_time\": \"10:40\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "c409c949-0abf-434c-882b-e954ecd5440f",
+            "colId": "e45616c6-5238-474f-bad0-71a4c1252b88",
+            "containerId": "",
+            "name": "delete_reservations",
+            "url": "http://localhost:8000/api/broadrooms/<id>/",
+            "method": "DELETE",
+            "sortNum": 37500,
+            "created": "2024-05-21T23:35:54.633Z",
+            "modified": "2024-05-21T23:38:18.678Z",
+            "headers": []
+        },
+        {
+            "_id": "ef301ba0-3b6f-45af-85e1-50da726a1c0f",
+            "colId": "e45616c6-5238-474f-bad0-71a4c1252b88",
+            "containerId": "",
+            "name": "get_broadrooms",
+            "url": "http://localhost:8000/api/broadrooms/",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-05-21T23:34:58.641Z",
+            "modified": "2024-05-21T23:38:05.175Z",
+            "headers": []
+        },
+        {
+            "_id": "de92052f-b9d7-4807-baf1-41bf930e0c3c",
+            "colId": "e45616c6-5238-474f-bad0-71a4c1252b88",
+            "containerId": "",
+            "name": "delete_broadroom",
+            "url": "http://localhost:8000/api/broadrooms/<id>/",
+            "method": "DELETE",
+            "sortNum": 60000,
+            "created": "2024-05-21T23:39:17.303Z",
+            "modified": "2024-05-21T23:39:31.421Z",
+            "headers": []
+        }
+    ],
+    "ref": "Y1fDzJhQyCInpVfO6SAyIPKtWF4Hs6wT-vJmd4iFRWTY_55ddGVT535LxlHgUfxKFQ2YaCrOUYM09gqSgGwyuA"
+}
