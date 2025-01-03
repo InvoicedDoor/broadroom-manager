@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from datetime import time, datetime
-from django.utils import timezone
+from datetime import time, datetime, timezone
+from django.utils import timezone as tz
 from django.db import connection
 from services.time_counter import auto_delete_rows
 from .serializer import ReservationSerializer
@@ -19,13 +19,13 @@ class ReservationView(viewsets.ModelViewSet):
     
     # Módificación de la función para el método POST
     def create(self, request, *args, **kwargs):
-        print(request.data)
+        
         # Variables iniciales para trabajar la función
-        start_time = request.data['start_time']
-        finish_time = request.data['finish_time']
-        print(f"{start_time}, {finish_time}, {datetime.now()}")
+        start_time = datetime.fromisoformat(request.data['start_time'])
+        finish_time = datetime.fromisoformat(request.data['finish_time'])
+
         serializer = self.get_serializer(data=request.data)
-        duration = datetime.fromisoformat(finish_time) - datetime.fromisoformat(start_time)
+        duration = finish_time - start_time
         
         # Validar que la hora de inicio no sea antes de la hora de registro
         if not self.validate_start_hour(start_time):
@@ -106,7 +106,7 @@ class ReservationView(viewsets.ModelViewSet):
     
     # Comprobar si la hora ingresada es después al tiempo actual
     def validate_start_hour(self, date):
-        if datetime.fromisoformat(date) > datetime.now():
+        if date > datetime.now():
             return True
         return False
     
@@ -114,8 +114,8 @@ class ReservationView(viewsets.ModelViewSet):
     def validate_finish_hour(self, start_time, finsih_time, duration):
         try:
             if duration < 7200:
-                if datetime.fromisoformat(finsih_time) > datetime.fromisoformat(start_time):
-                    if datetime.fromisoformat(start_time) > datetime.now():
+                if finsih_time > start_time:
+                    if start_time > datetime.now():
                         return True
                     return False
                 return False
@@ -126,7 +126,7 @@ class ReservationView(viewsets.ModelViewSet):
     # Dar formato datetime a la entrada ingresada por el usuario
     def formated_datetime(self, string_time):
         string_date = datetime.now().date()
-        return datetime.combine(string_date, time.fromisoformat(string_time)).isoformat()
+        return datetime.combine(string_date, string_time).isoformat()
     
     # Obtener las reservaciones
     def get_reservations(self, request):

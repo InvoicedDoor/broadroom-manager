@@ -3,6 +3,6 @@ from broadrooms import views
 
 router = routers.DefaultRouter()
 
-router.register('api/broadrooms', views.BroadroomView, 'broadrooms')
+router.register('broadrooms', views.BroadroomView, 'broadrooms')
 
 urlpatterns = router.urls

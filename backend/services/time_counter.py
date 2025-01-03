@@ -1,8 +1,7 @@
-from django.utils import timezone
 from time import sleep
 from threading import Thread
 from django.db import connection
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Función para calcular la hora de finalización reglamentaria
 def set_max_time():
@@ -41,7 +40,7 @@ def len_two(time):
 def count_seconds(seconds, start_time, id):
     try:
         while start_time:
-            if datetime.fromisoformat(start_time) < datetime.now():
+            if start_time < datetime.now():
                 break
             sleep(1)
         with connection.cursor() as cursor:
@@ -53,7 +52,7 @@ def count_seconds(seconds, start_time, id):
     except Exception as ex:
         print(f"Hubo un error {ex}")
     finally:
-        if cursor:
+        if cursor is not None:
             cursor.close()
 
 # Función para automatizar el borrado de registros

@@ -1,12 +1,12 @@
-const BASE_URL = 'http://localhost:5000'
+const BASE_URL = import.meta.env.VITE_SERVER_HOST
 
-interface Login
+export interface Login
 {
     email: string,
     password:string
 }
 
-interface Register
+export interface Register
 {
     name: string,
     enrollment: string,
@@ -21,9 +21,29 @@ export const isAuthenticated = () => {
 }
 
 export const login = async (login: Login) => {
-    const LOGIN_URL = `${BASE_URL}/login`
+    const LOGIN_URL = `${BASE_URL}auth/login`
+    const res = await fetch(LOGIN_URL, {
+        method: 'POST',
+        body: JSON.stringify(login)
+    })
+
+    const data = await res.json()
+
+    if (res.ok)
+    {
+        localStorage.setItem('token', data!.token)
+        return {
+            message: data!.message,
+            status: "Success"
+        }
+    }
+    else
+        return {
+            message: data!.message,
+            status: "Failed"
+        }
 }
 
 export const register = async (register: Register) => {
-    const REGISTER_URL = `${BASE_URL}/register`
+    const REGISTER_URL = `${BASE_URL}auth/register`
 }

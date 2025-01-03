@@ -3,6 +3,6 @@ from reservations import views
 
 router = routers.DefaultRouter()
 
-router.register('api/reservations', views.ReservationView, 'reservations')
+router.register('reservations', views.ReservationView, 'reservations')
 
 urlpatterns = router.urls

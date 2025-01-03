@@ -22,9 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-9kem70k9ykkm-)b*8^_*en688h+8j#c#o=l_4yly@i5351)wtl'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,9 +35,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'broadrooms',
+    'django_extensions',
     'users',
     'reservations',
     'auth_users',
+    'services'
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -91,6 +90,12 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'services.middleware.authenticate_verify.VerifyAuthentication',
+    ),
+}
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -132,9 +137,7 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Mexico_City'
 
-USE_I18N = True
-
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

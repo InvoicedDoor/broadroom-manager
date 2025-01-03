@@ -43,7 +43,7 @@ class LoginSerializer(serializers.Serializer):
     email = serializers.CharField(write_only=True)
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
 
-    def validate(self, attrs):        
+    def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')
 
@@ -56,6 +56,7 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Credenciales incorrectas. Por favor, inténtalo de nuevo.")
 
         if not user.check_password(password):
+            print("Contraseña incorrecta")
             raise serializers.ValidationError("Credenciales incorrectas. Por favor, inténtalo de nuevo.")
         
         if not user.is_active:

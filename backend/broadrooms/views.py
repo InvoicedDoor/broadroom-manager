@@ -3,11 +3,13 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .serializer import BroadroomsSerializer
 from .models import Broadroom
+from services.middleware.authenticate_verify import VerifyAuthentication
 
 # Create your views here.
 class BroadroomView(viewsets.ModelViewSet):
     queryset = Broadroom.objects.all()
     serializer_class = BroadroomsSerializer
+    authentication_classes = [VerifyAuthentication]
     
     def retrieve(self, request, *args, **kwargs):
         return Response({

@@ -40,6 +40,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
+import { login } from '@/services/auth.service';
 
 const email = ref()
 const password = ref()
@@ -55,17 +56,30 @@ const updateWidth = () => {
 
 const inputMail = (e) => {
     email.value = e.target.value
-    console.log(email.value)
 }
 
 const inputPassword = (e) => {
     password.value = e.target.value
-    console.log(password.value)
 }
 
-const handleInputButton = () => {
+const handleInputButton = async () => {
     if (email.value != undefined && password.value != undefined)
-        toast.success(`Se enviará ${email.value} y ${password.value}`)
+    {
+        const loginValues = {
+            email: email.value,
+            password: password.value
+        }
+
+        const res = await login(loginValues);
+
+        if (res.status == "Success")
+        {
+            toast.success(res.message)
+            window.location.href ='/'
+        }
+        else
+            toast.warn(res.message)
+    }
     else
         toast.error("Complete los campos requeridos.", {
     autoClose: 3000,

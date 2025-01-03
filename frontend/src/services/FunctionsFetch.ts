@@ -2,9 +2,10 @@ const BASE_URL = import.meta.env.VITE_SERVER_HOST
 
 /* Método GET */
 export const getReservations = async () => {
-  const res = await fetch(`${BASE_URL}/api/reservations/`, {
+  const res = await fetch(`${BASE_URL}reservations`, {
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `${localStorage.getItem('token')}`
     }
   })
 
@@ -20,9 +21,10 @@ export const getReservations = async () => {
 }
 
 export const getUsers = async () => {
-  const res = await fetch(`${BASE_URL}/api/users/`, {
+  const res = await fetch(`${BASE_URL}users/`, {
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `${localStorage.getItem('token')}`
     }
   })
   if (res.ok)
@@ -34,9 +36,10 @@ export const getUsers = async () => {
 }
 
 export const getRooms = async () => {
-  const res = await fetch(`${BASE_URL}/api/broadrooms/`, {
+  const res = await fetch(`${BASE_URL}broadrooms/`, {
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `${localStorage.getItem('token')}`
     }
   })
 
@@ -56,10 +59,11 @@ export const reserve = async (
   start_time: Date,
   finish_time: Date
 ) => {
-  const res = await fetch(`${BASE_URL}/api/reservations/`, {
+  const res = await fetch(`${BASE_URL}reservations/`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `${localStorage.getItem('token')}`
     },
     body: JSON.stringify({
       users_id: user_id,
@@ -74,10 +78,11 @@ export const reserve = async (
 
 // función para registrar reservaciones
 export const addUser = async (enrollment: string, name: string) => {
-  const res = await fetch(`${BASE_URL}/api/users/`, {
+  const res = await fetch(`${BASE_URL}users/`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `${localStorage.getItem('token')}`
     },
     body: JSON.stringify({
       enrollment: enrollment,
@@ -100,10 +105,11 @@ export const addUser = async (enrollment: string, name: string) => {
 /* DELETE */
 // función para registrar reservaciones
 export const cancelReservation = async (id: number) => {
-  const res = await fetch(`${BASE_URL}/api/reservations/${id}/`, {
+  const res = await fetch(`${BASE_URL}reservations/${id}/`, {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `${localStorage.getItem('token')}`
     }
   })
   if (!res) {

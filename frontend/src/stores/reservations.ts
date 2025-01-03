@@ -1,11 +1,11 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getRegisters } from '@/services/FunctionsFetch'
+import { getReservations } from '@/services/FunctionsFetch'
 
 export const reservationsStore = defineStore('reservations', () => {
     const reservations = ref()
-    async function getReservations() {
-        reservations.value = await getRegisters();
+    async function getReservationStore() {
+        reservations.value = await getReservations();
     }
 
     return { reservations, getReservations }

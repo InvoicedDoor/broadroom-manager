@@ -4,6 +4,6 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 
-router.register('api/auth', AuthUsersView, basename='auth')
+router.register(r'auth', AuthUsersView, basename='auth')
 
 urlpatterns = router.urls
