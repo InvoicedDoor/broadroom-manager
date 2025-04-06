@@ -1,0 +1,61 @@
+services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    container_name: "${APP_NAME}-mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${SET_ROOT_PASSWORD:-root}"
+      MYSQL_DATABASE: "${DB_NAME:-broadroom}"
+      MYSQL_USER: "${DB_USER:-test}"
+      MYSQL_PASSWORD: "${DB_PASS:-test}"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    networks:
+      - broadroom_manager
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      DB_NAME: "${DB_NAME:-database}"
+      DB_USER: "${DB_USER:-test}"
+      DB_PASSWORD: "${DB_PASSWORD:-test}"
+      DB_HOST: "${DB_HOST:-mysql}"
+      DB_PORT: "${DB_PORT:-3306}"
+    container_name: "${APP_NAME:-backend}-backend"
+    volumes:
+      - .:/backend
+    ports:
+      - "${APP_PORT:-8000}:4000"
+    networks:
+      - broadroom_manager
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: always
+    container_name: "broadroom_manager-frontend"
+    ports:
+      - "80:80"
+    working_dir: /usr/share/nginx/html
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - broadroom_manager
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  broadroom_manager:
+    driver: bridge

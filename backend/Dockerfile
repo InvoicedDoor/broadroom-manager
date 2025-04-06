@@ -1,16 +1,13 @@
-FROM python:3.11
+FROM python:3.12-slim AS development
 
-RUN apt update \
-    && apt-get install -y --no-install-recommends \
-    postgresql-client\
-    && rm -rf /var/lib/apt/lists/*
+RUN apt update
 
 WORKDIR /app
 
-COPY requirements.txt ./
-
-RUN pip install -r requirements.txt
 COPY . .
-EXPOSE 8080
-RUN python manage.py makemigrations
+
+RUN sh venv/Scripts/activate && pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 5000
+
 CMD ["python", "manage.py", "runserver", "0.0.0.0:4000"]

@@ -2,7 +2,7 @@ const BASE_URL = import.meta.env.VITE_SERVER_HOST
 
 /* Método GET */
 export const getReservations = async () => {
-  const res = await fetch(`${BASE_URL}reservations`, {
+  const res = await fetch(`${BASE_URL}reservations/`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `${localStorage.getItem('token')}`

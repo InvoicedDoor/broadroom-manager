@@ -2,6 +2,7 @@ import { isAuthenticated } from '@/services/auth.service';
 import { createRouter, createWebHistory } from 'vue-router'
 
 const LoginView = () => import('@/views/auth/LoginView.vue');
+const RegisterView = () => import('@/views/auth/RegisterView.vue');
 const MainView = () => import('@/views/MainView.vue');
 
 const router = createRouter({
@@ -24,7 +25,7 @@ const router = createRouter({
         {
             path: '/register',
             name: 'register',
-            component: LoginView,
+            component: RegisterView,
             beforeEnter: (to, from, next) => {
                 if (!isAuthenticated())
                 {

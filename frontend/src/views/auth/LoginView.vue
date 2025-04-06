@@ -24,7 +24,7 @@
                     @input="inputPassword">
                 </div>
                 <div class="mb-2 d-flex" style="width: 100%; justify-content: end;">
-                    <a href="" class="form-text">Registrarse</a>
+                    <a href="/register" class="form-text">Registrarse</a>
                 </div>
                 <div class="col-auto">
                     <button 
