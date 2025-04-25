@@ -22,6 +22,9 @@ export const isAuthenticated = () => {
 
 export const login = async (login: Login) => {
     const LOGIN_URL = `${BASE_URL}auth/login/`
+    console.log("Login URL: ", LOGIN_URL)
+
+    debugger
     const res = await fetch(LOGIN_URL, {
         method: 'POST',
         body: JSON.stringify(login)
@@ -46,4 +49,25 @@ export const login = async (login: Login) => {
 
 export const register = async (register: Register) => {
     const REGISTER_URL = `${BASE_URL}auth/register/`
+
+    const res = await fetch(REGISTER_URL, {
+        method: 'POST',
+        body: JSON.stringify(register)
+    })
+
+    const data = await res.json()
+
+    if (res.ok)
+    {
+        localStorage.setItem('token', data!.token)
+        return {
+            message: data!.message,
+            status: "Success"
+        }
+    }
+    else
+        return {
+            message: data!.message,
+            status: "Failed"
+        }
 }

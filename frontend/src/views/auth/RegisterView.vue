@@ -46,7 +46,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { toast } from 'vue3-toastify';
-import { login } from '@/services/auth.service';
+import { register } from '@/services/auth.service';
 
 const name = ref()
 const email = ref()
@@ -76,20 +76,17 @@ const inputPassword = (e) => {
 const handleInputButton = async () => {
     if (email.value != undefined && password.value != undefined)
     {
-        console.log()
-
-        return
-        const loginValues = {
+        const registerValues = {
             email: email.value,
             password: password.value
         }
 
-        const res = await login(loginValues);
+        const res = await register(registerValues);
 
         if (res.status == "Success")
         {
             toast.success(res.message)
-            window.location.href ='/'
+            window.location.href ='/login'
         }
         else
             toast.warn(res.message)
